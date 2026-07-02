@@ -52,7 +52,6 @@
               step="0.5"
               value="6"
               autocomplete="off"
-              ;
             />
             <span class="input-value" id="screenTimeValue">6 jam</span>
           </div>
@@ -71,7 +70,6 @@
               step="0.5"
               value="7"
               autocomplete="off"
-              ;
             />
             <span class="input-value" id="sleepValue">7 jam</span>
           </div>
@@ -90,7 +88,6 @@
               step="0.5"
               value="3"
               autocomplete="off"
-              ;
             />
             <span class="input-value" id="socialMediaValue">3 jam</span>
           </div>
@@ -109,7 +106,6 @@
               step="0.5"
               value="2"
               autocomplete="off"
-              ;
             />
             <span class="input-value" id="gamingValue">2 jam</span>
           </div>
@@ -128,7 +124,6 @@
               step="0.5"
               value="4"
               autocomplete="off"
-              ;
             />
             <span class="input-value" id="studyValue">4 jam</span>
           </div>
@@ -221,8 +216,28 @@
       </section>
     </main>
 
+    <!-- ===== LOADING OVERLAY (ANALYSIS TRANSITION) ===== -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+      <div class="loading-card">
+        <div class="loading-icon">🧠</div>
+        <h2 class="loading-title">Digital Well-Being Analyzer</h2>
+
+        <div class="loading-progress-track">
+          <div class="loading-progress-fill" id="loadingProgressFill"></div>
+        </div>
+        <span class="loading-percentage" id="loadingPercentage">0%</span>
+
+        <p class="loading-analysis-text" id="loadingAnalysisText">
+          📱 Menganalisis Screen Time
+        </p>
+
+        <p class="loading-subtext">Mohon tunggu sebentar...</p>
+      </div>
+    </div>
+
     <script src="js/scoring.js"></script>
     <script src="js/recommendation.js"></script>
+    <script src="js/loading.js"></script>
     <script src="js/script.js"></script>
   </body>
 </html>

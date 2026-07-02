@@ -101,11 +101,16 @@ btnSeeResult.addEventListener("click", function () {
     study: Number(document.querySelector("#study").value),
   };
 
+  // Skor & kategori dihitung SEKARANG, sebelum animasi dimulai --
+  // loading tidak pernah tahu hasilnya, murni kosmetik.
   const wellnessScore = calculateWellnessScore(userData);
   const wellnessCategory = getWellnessCategory(wellnessScore);
 
-  renderDashboard(userData, wellnessScore, wellnessCategory);
-  showSection("dashboard");
+  // Dashboard baru dirender & ditampilkan SETELAH loading selesai
+  runAnalysisLoading(function () {
+    renderDashboard(userData, wellnessScore, wellnessCategory);
+    showSection("dashboard");
+  });
 });
 
 /**
@@ -152,32 +157,36 @@ function renderDashboard(userData, score, category) {
 /**
  * Menganimasikan angka skor dari 0 naik bertahap ke nilai akhir.
  */
+/**
+ * Menganimasikan angka skor dari 0 naik ke nilai akhir dengan efek
+ * ease-out: cepat di awal, melambat menjelang akhir.
+ */
 function animateScore(finalScore) {
-  const scoreElement = document.querySelector(".score-number");
+    const scoreElement = document.querySelector(".score-number");
 
-  // Hormati preferensi reduced motion: langsung tampilkan angka final, tanpa animasi
-  const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  ).matches;
-  if (prefersReducedMotion) {
-    scoreElement.textContent = finalScore;
-    return;
-  }
-
-  let current = 0;
-  const duration = 600; // total durasi animasi dalam milidetik
-  const stepTime = 20; // jeda antar-langkah
-  const totalSteps = duration / stepTime;
-  const increment = finalScore / totalSteps;
-
-  const interval = setInterval(function () {
-    current += increment;
-
-    if (current >= finalScore) {
-      scoreElement.textContent = finalScore;
-      clearInterval(interval);
-    } else {
-      scoreElement.textContent = Math.round(current);
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
+        scoreElement.textContent = finalScore;
+        return;
     }
-  }, stepTime);
+
+    const duration = 10000; // total durasi animasi (ms)
+    const startTime = performance.now();
+
+    function tick(now) {
+        const elapsed = now - startTime;
+        const rawProgress = Math.min(1, elapsed / duration); // 0 -> 1, dibatasi maks 1
+
+        // Rumus cubic ease-out: melengkungkan progress linear jadi "cepat lalu melambat"
+        const easedProgress = 1 - Math.pow(1 - rawProgress, 3);
+
+        const currentValue = Math.round(easedProgress * finalScore);
+        scoreElement.textContent = currentValue;
+
+        if (rawProgress < 1) {
+            requestAnimationFrame(tick);
+        }
+    }
+
+    requestAnimationFrame(tick);
 }
