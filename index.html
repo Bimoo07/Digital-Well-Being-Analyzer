@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digital Well-Being Analyzer</title>
+
+    <!-- Google Fonts: Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS utama -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main>
+      <!-- ===== SECTION: LANDING ===== -->
+      <section id="landing" class="landing-section">
+        <div class="landing-card">
+          <h1 class="landing-title">Digital Well-Being Analyzer</h1>
+          <p class="landing-subtitle">
+            Kenali kebiasaan digitalmu dan temukan seberapa seimbang gaya
+            hidupmu di era teknologi.
+          </p>
+          <button id="btnStartAssessment" class="btn-primary" type="button">
+            Mulai Assessment
+          </button>
+        </div>
+      </section>
+
+      <!-- ===== SECTION: ASSESSMENT ===== -->
+      <section id="assessment" class="assessment-section hidden">
+        <h2 class="section-title">Isi Data Kebiasaanmu</h2>
+        <p class="section-subtitle">Geser slider sesuai kebiasaan harianmu.</p>
+
+        <div class="assessment-grid">
+          <!-- Card 1: Screen Time -->
+          <div class="input-card">
+            <span class="input-icon">📱</span>
+            <label for="screenTime" class="input-label">Screen Time</label>
+            <input
+              type="range"
+              id="screenTime"
+              class="slider"
+              data-metric="screenTime"
+              min="0"
+              max="16"
+              step="0.5"
+              value="6"
+              autocomplete="off"
+              ;
+            />
+            <span class="input-value" id="screenTimeValue">6 jam</span>
+          </div>
+
+          <!-- Card 2: Sleep Duration -->
+          <div class="input-card">
+            <span class="input-icon">😴</span>
+            <label for="sleep" class="input-label">Durasi Tidur</label>
+            <input
+              type="range"
+              id="sleep"
+              class="slider"
+              data-metric="sleep"
+              min="0"
+              max="12"
+              step="0.5"
+              value="7"
+              autocomplete="off"
+              ;
+            />
+            <span class="input-value" id="sleepValue">7 jam</span>
+          </div>
+
+          <!-- Card 3: Social Media -->
+          <div class="input-card">
+            <span class="input-icon">📲</span>
+            <label for="socialMedia" class="input-label">Social Media</label>
+            <input
+              type="range"
+              id="socialMedia"
+              class="slider"
+              data-metric="socialMedia"
+              min="0"
+              max="10"
+              step="0.5"
+              value="3"
+              autocomplete="off"
+              ;
+            />
+            <span class="input-value" id="socialMediaValue">3 jam</span>
+          </div>
+
+          <!-- Card 4: Gaming -->
+          <div class="input-card">
+            <span class="input-icon">🎮</span>
+            <label for="gaming" class="input-label">Gaming</label>
+            <input
+              type="range"
+              id="gaming"
+              class="slider"
+              data-metric="gaming"
+              min="0"
+              max="10"
+              step="0.5"
+              value="2"
+              autocomplete="off"
+              ;
+            />
+            <span class="input-value" id="gamingValue">2 jam</span>
+          </div>
+
+          <!-- Card 5: Study Duration -->
+          <div class="input-card">
+            <span class="input-icon">📚</span>
+            <label for="study" class="input-label">Durasi Belajar</label>
+            <input
+              type="range"
+              id="study"
+              class="slider"
+              data-metric="study"
+              min="0"
+              max="10"
+              step="0.5"
+              value="4"
+              autocomplete="off"
+              ;
+            />
+            <span class="input-value" id="studyValue">4 jam</span>
+          </div>
+        </div>
+
+        <button id="btnSeeResult" class="btn-primary" type="button">
+          Lihat Hasil
+        </button>
+      </section>
+
+      <!-- ===== SECTION: DASHBOARD ===== -->
+      <section id="dashboard" class="dashboard-section hidden">
+        <h2 class="section-title">Hasil Digital Well-Being Kamu</h2>
+
+        <div class="score-card">
+          <div class="score-circle">
+            <span class="score-number">--</span>
+            <span class="score-label">/ 100</span>
+          </div>
+          <span class="category-badge">--</span>
+        </div>
+
+        <div class="progress-list">
+          <div class="progress-item" data-metric="screenTime" data-max="16">
+            <div class="progress-header">
+              <span>📱 Screen Time</span>
+              <span class="progress-value">-- jam</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="progress-item" data-metric="sleep" data-max="12">
+            <div class="progress-header">
+              <span>😴 Durasi Tidur</span>
+              <span class="progress-value">-- jam</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="progress-item" data-metric="socialMedia" data-max="10">
+            <div class="progress-header">
+              <span>📲 Social Media</span>
+              <span class="progress-value">-- jam</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="progress-item" data-metric="gaming" data-max="10">
+            <div class="progress-header">
+              <span>🎮 Gaming</span>
+              <span class="progress-value">-- jam</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="progress-item" data-metric="study" data-max="10">
+            <div class="progress-header">
+              <span>📚 Durasi Belajar</span>
+              <span class="progress-value">-- jam</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== PSYCHOLOGY INSIGHT ===== -->
+        <div class="insight-box">
+          <h3 class="insight-title">🧠 Psychology Insight</h3>
+          <p class="psychology-insight">--</p>
+        </div>
+
+        <!-- ===== RECOMMENDATION LIST ===== -->
+        <div class="recommendation-box">
+          <h3 class="recommendation-title">💡 Rekomendasi untuk Kamu</h3>
+          <ul class="recommendation-list"></ul>
+        </div>
+
+        <button id="btnRestart" class="btn-secondary" type="button">
+          Ulangi Assessment
+        </button>
+      </section>
+    </main>
+
+    <script src="js/scoring.js"></script>
+    <script src="js/recommendation.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>

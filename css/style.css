@@ -1,0 +1,452 @@
+/* ===== CSS VARIABLES (DESIGN SYSTEM) ===== */
+:root {
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-secondary: #60a5fa;
+  --color-background: #f8fafc;
+  --color-card: #ffffff;
+  --color-text-primary: #1e293b;
+  --color-text-secondary: #64748b;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-track: #e2e8f0;
+
+  --font-family: "Montserrat", sans-serif;
+
+  --radius-lg: 20px;
+  --shadow-soft: 0 10px 30px rgba(37, 99, 235, 0.08);
+}
+
+/* ===== RESET DASAR ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
+/* ===== LANDING SECTION ===== */
+.landing-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.landing-card {
+  background-color: var(--color-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 48px 32px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+}
+
+.landing-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.landing-subtitle {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  margin-bottom: 32px;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 32px;
+  font-family: var(--font-family);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+/* ===== RESPONSIVE: TABLET & DESKTOP (LANDING) ===== */
+@media (min-width: 768px) {
+  .landing-title {
+    font-size: 34px;
+  }
+
+  .landing-subtitle {
+    font-size: 16px;
+  }
+}
+
+/* ===== UTILITY ===== */
+.hidden {
+  display: none;
+}
+
+/* ===== ASSESSMENT SECTION ===== */
+.assessment-section {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.section-subtitle {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.assessment-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.input-card {
+  background-color: var(--color-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 20px 24px;
+}
+
+.input-icon {
+  font-size: 24px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.input-label {
+  display: block;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 16px;
+}
+
+/* Reset tampilan default slider browser */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  outline: none;
+  margin-bottom: 12px;
+  /* Background awal: nanti akan ditimpa JS jadi gradient */
+  background: var(--color-secondary);
+}
+
+/* Track khusus Chrome/Edge/Safari */
+.slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+}
+
+/* Track khusus Firefox */
+.slider::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-secondary);
+}
+
+/* Bulatan (thumb) slider - khusus browser Chrome/Edge/Safari */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  border: 3px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+}
+
+/* Bulatan (thumb) slider - khusus browser Firefox */
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  border: 3px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+}
+
+.input-value {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* ===== RESPONSIVE: TABLET & DESKTOP (ASSESSMENT) ===== */
+@media (min-width: 768px) {
+  .assessment-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ===== DASHBOARD SECTION ===== */
+.dashboard-section {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.score-card {
+  background-color: var(--color-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 32px 24px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.score-circle {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 8px solid var(--color-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.score-number {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.score-label {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 6px 20px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--color-text-secondary);
+}
+
+.category-excellent {
+  background-color: var(--color-success);
+}
+
+.category-good {
+  background-color: var(--color-primary);
+}
+
+.category-fair {
+  background-color: var(--color-warning);
+}
+
+.category-poor {
+  background-color: var(--color-danger);
+}
+
+.progress-list {
+  margin-bottom: 32px;
+}
+
+.progress-item {
+  background-color: var(--color-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 16px 20px;
+  margin-bottom: 12px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.progress-value {
+  color: var(--color-text-secondary);
+}
+
+.progress-track {
+  width: 100%;
+  height: 8px;
+  background-color: var(--color-track);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background-color: var(--color-primary);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  border-radius: 12px;
+  padding: 12px 32px;
+  font-family: var(--font-family);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+/* ===== PSYCHOLOGY INSIGHT ===== */
+.insight-box {
+  background-color: var(--color-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  border-left: 4px solid var(--color-primary);
+}
+
+.insight-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.psychology-insight {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+/* ===== RECOMMENDATION LIST ===== */
+.recommendation-box {
+  background-color: var(--color-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+
+.recommendation-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.recommendation-list {
+  list-style: none;
+}
+
+.recommendation-list li {
+  font-size: 14px;
+  color: var(--color-text-primary);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-track);
+  padding-left: 24px;
+  position: relative;
+}
+
+.recommendation-list li:last-child {
+  border-bottom: none;
+}
+
+/* Bullet custom pengganti list-style default */
+.recommendation-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--color-success);
+  font-weight: 700;
+}
+
+/* ===== ANIMASI: FADE + SLIDE MASUK UNTUK SECTION ===== */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section-enter {
+  animation: fadeSlideIn 0.4s ease forwards;
+}
+
+/* ===== ANIMASI: CARD ASSESSMENT MUNCUL BERTAHAP ===== */
+.input-card {
+  opacity: 0;
+  animation: fadeSlideIn 0.4s ease forwards;
+}
+
+/* Beri jeda berbeda ke tiap card berdasarkan urutannya di dalam grid */
+.input-card:nth-child(1) { animation-delay: 0.05s; }
+.input-card:nth-child(2) { animation-delay: 0.1s; }
+.input-card:nth-child(3) { animation-delay: 0.15s; }
+.input-card:nth-child(4) { animation-delay: 0.2s; }
+.input-card:nth-child(5) { animation-delay: 0.25s; }
+
+/* ===== TOMBOL: FEEDBACK SAAT DITEKAN ===== */
+.btn-primary:active,
+.btn-secondary:active {
+  transform: scale(0.97);
+}
+
+/* ===== AKSESIBILITAS: HORMATI PENGATURAN REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  .section-enter,
+  .input-card {
+    animation: none;
+    opacity: 1;
+  }
+
+  .progress-fill {
+    transition: none;
+  }
+
+  .btn-primary:active,
+  .btn-secondary:active {
+    transform: none;
+  }
+}
