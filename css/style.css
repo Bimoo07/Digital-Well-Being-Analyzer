@@ -4,17 +4,39 @@
   --color-primary-hover: #1d4ed8;
   --color-secondary: #60a5fa;
   --color-background: #f8fafc;
-  --color-card: #edebeb;
+  --color-card: #ffffff;
   --color-text-primary: #1e293b;
-  --color-text-secondary: #4b6a95;
+  --color-text-secondary: #64748b;
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
   --color-track: #e2e8f0;
 
+  /* ===== EASING & DURASI (Micro Interaction) =====
+     Disimpan sebagai variabel supaya "rasa" animasi konsisten,
+     bukan angka acak di tiap rule. */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);   /* untuk animasi MASUK/entrance -- terasa "melesat lalu mendarat halus" */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);    /* untuk interaksi hover/klik -- gerakan pendek, natural */
+  --duration-micro: 200ms;                          /* hover, klik -- dalam rentang 150-300ms yang diminta */
+
+  /* PALLETE Gradient Backgroug */
+  --color-bg-blue: #eef8ff;
+  --color-bg-cyan: #e8f7f4;
+  --color-bg-white: #ffffff;
+
+  /*Accent hijau mint */
+  --color-accent-mint: #6ee7b7;
+
+  /*Warna dasar untuk efek kaca */
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-blur: 16px;
+
   --font-family: "Montserrat", sans-serif;
 
   --radius-lg: 20px;
+  --radius-md: 12px;
+  --radius-full: 999px;
   --shadow-soft: 0 10px 30px rgba(37, 99, 235, 0.08);
 }
 
@@ -27,7 +49,15 @@
 
 body {
   font-family: var(--font-family);
-  background-color: var(--color-background);
+  /* Gradient 3 warna, arah diagonal 135deg untuk kesan lembut & dinamis,
+     bukan gradient lurus vertikal yang terasa kaku */
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-blue) 0%,
+    var(--color-bg-cyan) 50%,
+    var(--color-bg-white) 100%
+  );
+  background-attachment: fixed; /* gradient tidak ikut scroll, tetap di posisi layar */
   color: var(--color-text-primary);
   line-height: 1.6;
 }
@@ -42,7 +72,6 @@ body {
 }
 
 .landing-card {
-  background-color: var(--color-card);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
   padding: 48px 32px;
@@ -53,7 +82,9 @@ body {
 
 .landing-title {
   font-size: 28px;
-  font-weight: 700;
+  font-weight: 800; /* dari 700 -> 800, heading utama harus paling tegas */
+  line-height: 1.2; /* heading pakai line-height rapat, bukan 1.6 seperti body */
+  letter-spacing: -0.01em; /* sedikit dirapatkan, kesan modern pada judul besar */
   margin-bottom: 16px;
 }
 
@@ -62,24 +93,52 @@ body {
   font-weight: 400;
   color: var(--color-text-secondary);
   margin-bottom: 32px;
+  line-height: 1.5;
 }
 
 .btn-primary {
+  position: relative; /* jangkar untuk panah ::after di bawah */
   background-color: var(--color-primary);
   color: #ffffff;
   border: none;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   padding: 14px 32px;
   font-family: var(--font-family);
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   width: 100%;
-  transition: background-color 0.2s ease;
+  /* Tiga properti dianimasikan terpisah (bukan "all") supaya jelas
+     properti mana yang berubah -- lebih mudah dibaca & di-debug */
+  transition:
+    background-color var(--duration-micro) var(--ease-standard),
+    transform var(--duration-micro) var(--ease-standard),
+    box-shadow var(--duration-micro) var(--ease-standard);
 }
 
 .btn-primary:hover {
   background-color: var(--color-primary-hover);
+  transform: translateY(-2px); /* sedikit naik */
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.28); /* shadow bertambah saat hover */
+}
+
+/* Panah dekoratif -- dibuat dari CSS, bukan icon di HTML.
+   Diam & tersembunyi secara default, muncul + bergeser saat hover. */
+.btn-primary::after {
+  content: "→";
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translate(-4px, -50%);
+  opacity: 0;
+  transition:
+    opacity var(--duration-micro) var(--ease-standard),
+    transform var(--duration-micro) var(--ease-standard);
+}
+
+.btn-primary:hover::after {
+  opacity: 1;
+  transform: translate(0, -50%); /* "bergeser masuk" ke posisi akhir */
 }
 
 /* ===== RESPONSIVE: TABLET & DESKTOP (LANDING) ===== */
@@ -106,8 +165,9 @@ body {
 }
 
 .section-title {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
+  line-height: 1.3;
   text-align: center;
   margin-bottom: 8px;
 }
@@ -117,6 +177,7 @@ body {
   color: var(--color-text-secondary);
   text-align: center;
   margin-bottom: 32px;
+  line-height: 1.5;
 }
 
 .assessment-grid {
@@ -127,7 +188,6 @@ body {
 }
 
 .input-card {
-  background-color: var(--color-card);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
   padding: 20px 24px;
@@ -218,7 +278,7 @@ body {
 }
 
 .score-card {
-  background-color: var(--color-card);
+  opacity: 0;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
   padding: 32px 24px;
@@ -280,7 +340,6 @@ body {
 }
 
 .progress-item {
-  background-color: var(--color-card);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
   padding: 16px 20px;
@@ -297,6 +356,7 @@ body {
 
 .progress-value {
   color: var(--color-text-secondary);
+  letter-spacing: 0.01em;
 }
 
 .progress-track {
@@ -312,14 +372,15 @@ body {
   width: 0%;
   background-color: var(--color-primary);
   border-radius: 999px;
-  transition: width 0.3s ease;
+  transition: width 300ms var(--ease-out-expo);
 }
 
 .btn-secondary {
+  position: relative;
   background-color: transparent;
   color: var(--color-primary);
   border: 2px solid var(--color-primary);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   padding: 12px 32px;
   font-family: var(--font-family);
   font-size: 15px;
@@ -327,18 +388,38 @@ body {
   cursor: pointer;
   width: 100%;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+    background-color var(--duration-micro) var(--ease-standard),
+    color var(--duration-micro) var(--ease-standard),
+    transform var(--duration-micro) var(--ease-standard),
+    box-shadow var(--duration-micro) var(--ease-standard);
 }
 
 .btn-secondary:hover {
   background-color: var(--color-primary);
   color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+}
+
+.btn-secondary::after {
+  content: "→";
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translate(-4px, -50%);
+  opacity: 0;
+  transition:
+    opacity var(--duration-micro) var(--ease-standard),
+    transform var(--duration-micro) var(--ease-standard);
+}
+
+.btn-secondary:hover::after {
+  opacity: 1;
+  transform: translate(0, -50%);
 }
 
 /* ===== PSYCHOLOGY INSIGHT ===== */
 .insight-box {
-  background-color: var(--color-card);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
   padding: 20px 24px;
@@ -359,7 +440,6 @@ body {
 
 /* ===== RECOMMENDATION LIST ===== */
 .recommendation-box {
-  background-color: var(--color-card);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
   padding: 20px 24px;
@@ -421,11 +501,21 @@ body {
 }
 
 /* Beri jeda berbeda ke tiap card berdasarkan urutannya di dalam grid */
-.input-card:nth-child(1) { animation-delay: 0.05s; }
-.input-card:nth-child(2) { animation-delay: 0.1s; }
-.input-card:nth-child(3) { animation-delay: 0.15s; }
-.input-card:nth-child(4) { animation-delay: 0.2s; }
-.input-card:nth-child(5) { animation-delay: 0.25s; }
+.input-card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.input-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.input-card:nth-child(3) {
+  animation-delay: 0.15s;
+}
+.input-card:nth-child(4) {
+  animation-delay: 0.2s;
+}
+.input-card:nth-child(5) {
+  animation-delay: 0.25s;
+}
 
 /* ===== TOMBOL: FEEDBACK SAAT DITEKAN ===== */
 .btn-primary:active,
@@ -449,6 +539,29 @@ body {
   .btn-secondary:active {
     transform: none;
   }
+  .btn-primary,
+  .btn-secondary,
+  .landing-card,
+  .input-card,
+  .score-card,
+  .progress-item,
+  .insight-box,
+  .recommendation-box,
+  .recommendation-list li,
+  .slider {
+    transition: none;
+  }
+
+  .score-card,
+  .recommendation-list li {
+    animation: none;
+    opacity: 1;
+  }
+
+  .btn-primary:hover,
+  .btn-secondary:hover {
+    transform: none;
+  }
 }
 
 /* ===== LOADING OVERLAY (ANALYSIS TRANSITION) ===== */
@@ -470,7 +583,6 @@ body {
 }
 
 .loading-card {
-  background-color: var(--color-card);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
   padding: 40px 32px;
@@ -486,8 +598,13 @@ body {
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
 }
 
 .loading-title {
@@ -508,7 +625,11 @@ body {
 .loading-progress-fill {
   height: 100%;
   width: 0%;
-  background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+  background: linear-gradient(
+    to right,
+    var(--color-primary),
+    var(--color-secondary)
+  );
   border-radius: 999px;
   transition-property: width;
   transition-timing-function: linear;
@@ -543,6 +664,7 @@ body {
   font-size: 12px;
   color: var(--color-text-secondary);
   margin-top: 16px;
+  letter-spacing: 0.01em;
 }
 
 /* Efek blur & shrink pada section aktif saat loading berjalan */
@@ -566,5 +688,314 @@ main.blurred {
   main.blurred,
   .shrink {
     transition: none;
+  }
+  .btn-primary,
+  .btn-secondary,
+  .landing-card,
+  .input-card,
+  .score-card,
+  .progress-item,
+  .insight-box,
+  .recommendation-box,
+  .recommendation-list li,
+  .slider {
+    transition: none;
+  }
+
+  .score-card,
+  .recommendation-list li {
+    animation: none;
+    opacity: 1;
+  }
+
+  .btn-primary:hover,
+  .btn-secondary:hover {
+    transform: none;
+  }
+}
+
+/* ===== GLASSMORPHISM: DITERAPKAN KE SELURUH CARD UTAMA =====
+   Grouped selector: 1 aturan untuk 7 komponen berbeda, menghindari
+   menulis efek identik 7 kali (prinsip DRY). Baris background-color
+   solid di tiap komponen sudah dihapus di atas -- inilah pengganti-
+   nya, dengan lapisan transparan + blur. */
+.landing-card,
+.input-card,
+.score-card,
+.progress-item,
+.insight-box,
+.recommendation-box,
+.loading-card {
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(
+    var(--glass-blur)
+  ); /* Safari butuh prefix -webkit- */
+}
+
+/* Fallback: browser yang TIDAK mendukung backdrop-filter akan
+   memakai kartu putih solid seperti sebelumnya, supaya tetap
+   terbaca jelas (bukan transparan tanpa efek kaca sama sekali) */
+@supports not (backdrop-filter: blur(1px)) {
+  .landing-card,
+  .input-card,
+  .score-card,
+  .progress-item,
+  .insight-box,
+  .recommendation-box,
+  .loading-card {
+    background-color: var(--color-card);
+  }
+}
+
+/* ===== CARD HOVER: Grup dengan transform bebas =====
+   Elemen ini TIDAK memiliki animation forwards pada transform-nya
+   sendiri, jadi hover boleh memakai translateY dengan aman. */
+.landing-card,
+.progress-item,
+.insight-box,
+.recommendation-box {
+  transition:
+    transform var(--duration-micro) var(--ease-standard),
+    box-shadow var(--duration-micro) var(--ease-standard),
+    border-color var(--duration-micro) var(--ease-standard);
+}
+
+.landing-card:hover,
+.progress-item:hover,
+.insight-box:hover,
+.recommendation-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(37, 99, 235, 0.14);
+  border-color: rgba(255, 255, 255, 0.9); /* border sedikit lebih terang */
+}
+
+/* ===== CARD HOVER: Grup terbatas =====
+   .input-card & .score-card memiliki animation forwards yang
+   mengunci property transform -- hover TIDAK BOLEH ikut memakai
+   transform, karena akan kalah prioritas melawan animasi tersebut.
+   Cukup shadow & border yang berubah saat hover. */
+.input-card,
+.score-card {
+  transition:
+    box-shadow var(--duration-micro) var(--ease-standard),
+    border-color var(--duration-micro) var(--ease-standard);
+}
+
+.input-card:hover,
+.score-card:hover {
+  box-shadow: 0 16px 36px rgba(37, 99, 235, 0.14);
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+/* ===== SLIDER FOCUS (accessibility: hanya nyala untuk keyboard) ===== */
+.slider {
+  transition: box-shadow var(--duration-micro) var(--ease-standard);
+}
+
+.slider:focus-visible {
+  outline: none; /* ganti outline browser default dengan glow custom */
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.18);
+  border-radius: var(--radius-full);
+}
+
+/* Thumb ikut memberi glow saat slider di-fokus lewat keyboard */
+.slider:focus-visible::-webkit-slider-thumb {
+  box-shadow:
+    0 2px 6px rgba(37, 99, 235, 0.4),
+    0 0 0 5px rgba(37, 99, 235, 0.18);
+}
+
+.slider:focus-visible::-moz-range-thumb {
+  box-shadow:
+    0 2px 6px rgba(37, 99, 235, 0.4),
+    0 0 0 5px rgba(37, 99, 235, 0.18);
+}
+
+/* ===== RESULT CARD ENTRANCE (fade + translateY + scale) ===== */
+@keyframes resultCardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Selector ini menargetkan .score-card HANYA KETIKA section
+   dashboard sedang memiliki class "section-enter" -- class itu
+   sudah dipasang otomatis oleh showSection() di script.js sejak
+   Sprint 5/7. Tidak ada HTML/JS baru yang perlu ditambah. */
+.dashboard-section.section-enter .score-card {
+  animation: resultCardEnter 300ms var(--ease-out-expo) forwards;
+}
+
+/* ===== RECOMMENDATION LIST: STAGGER ANIMATION =====
+   Teknik identik dengan .input-card di Sprint 7 -- delay bertahap
+   via :nth-child, diterapkan ke elemen <li> yang dibuat script.js. */
+.recommendation-list li {
+  opacity: 0;
+  animation: fadeSlideIn 300ms var(--ease-out-expo) forwards;
+}
+
+.recommendation-list li:nth-child(1) { animation-delay: 0.05s; }
+.recommendation-list li:nth-child(2) { animation-delay: 0.1s; }
+.recommendation-list li:nth-child(3) { animation-delay: 0.15s; }
+.recommendation-list li:nth-child(4) { animation-delay: 0.2s; }
+.recommendation-list li:nth-child(5) { animation-delay: 0.25s; }
+
+/* ===== FLOATING BACKGROUND SHAPES ===== */
+
+/* Beri "panggung" untuk shape supaya berada DI BELAKANG konten,
+   tanpa mengubah HTML konten itu sendiri. */
+main {
+  position: relative;
+  z-index: 1;
+}
+
+.floating-shapes {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0; /* di bawah main (z-index: 1), di atas background body */
+  pointer-events: none; /* WAJIB -- tanpa ini, shape fullscreen akan
+                            memblokir klik ke seluruh halaman, persis
+                            seperti bug overlay loading sebelumnya */
+}
+
+.shape {
+  position: absolute;
+  filter: blur(2px); /* blur ringan default, sebagian shape override di bawah */
+}
+
+/* ----- Bentuk-bentuk (dibuat murni dari CSS, tanpa gambar/SVG) ----- */
+.shape-circle {
+  border-radius: 50%;
+}
+
+.shape-outline {
+  border-radius: 50%;
+  background: transparent;
+  border: 2px solid rgba(37, 99, 235, 0.25);
+  filter: none; /* garis tipis, blur akan membuatnya hilang */
+}
+
+.shape-diamond {
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+.shape-hexagon {
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+.shape-sparkle {
+  clip-path: polygon(
+    50% 0%, 61% 39%, 100% 50%, 61% 61%,
+    50% 100%, 39% 61%, 0% 50%, 39% 39%
+  );
+  filter: none;
+}
+
+/* ----- Animasi tunggal, dipakai ulang oleh semua shape (prinsip DRY) -----
+   Hanya transform yang dianimasikan (bukan top/left), supaya browser
+   bisa memprosesnya di compositor thread -- ringan meski berjalan
+   20-30 detik terus-menerus tanpa henti. */
+@keyframes floatShape {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -28px, 0) rotate(8deg);
+  }
+}
+
+.shape {
+  animation-name: floatShape;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* ----- Posisi, ukuran, warna, & timing tiap shape -----
+   Disebar ke area TEPI layar (dekat sudut), sengaja menghindari
+   area tengah tempat card mengambang, sesuai instruksi "jangan
+   mengganggu card". Durasi & delay berbeda-beda supaya gerakan
+   antar-shape terasa organik, bukan serempak. */
+.shape-1 {
+  top: 8%;
+  left: 6%;
+  width: 140px;
+  height: 140px;
+  background: var(--color-secondary);
+  opacity: 0.12;
+  animation-duration: 24s;
+}
+
+.shape-2 {
+  top: 14%;
+  right: 8%;
+  width: 90px;
+  height: 90px;
+  animation-duration: 28s;
+  animation-delay: 2s;
+}
+
+.shape-3 {
+  bottom: 14%;
+  left: 9%;
+  width: 110px;
+  height: 110px;
+  background: var(--color-accent-mint);
+  opacity: 0.14;
+  animation-duration: 22s;
+  animation-delay: 4s;
+}
+
+.shape-4 {
+  bottom: 18%;
+  right: 6%;
+  width: 160px;
+  height: 160px;
+  background: var(--color-secondary);
+  opacity: 0.1;
+  animation-duration: 30s;
+  animation-delay: 1s;
+}
+
+.shape-5 {
+  top: 45%;
+  left: 3%;
+  width: 46px;
+  height: 46px;
+  background: var(--color-primary);
+  opacity: 0.16;
+  animation-duration: 20s;
+  animation-delay: 3s;
+}
+
+.shape-6 {
+  top: 62%;
+  right: 4%;
+  width: 70px;
+  height: 70px;
+  background: var(--color-accent-mint);
+  opacity: 0.12;
+  animation-duration: 26s;
+  animation-delay: 5s;
+}
+
+/* ===== RESPONSIVE: KURANGI JUMLAH SHAPE DI MOBILE =====
+   Berbeda dari pola mobile-first (min-width) yang biasa dipakai
+   di project ini -- di sini sengaja pakai max-width, karena
+   tujuannya MENGURANGI elemen di layar kecil demi performa,
+   bukan menambah fitur di layar besar seperti sprint-sprint lain. */
+@media (max-width: 640px) {
+  .shape-3,
+  .shape-4,
+  .shape-5,
+  .shape-6 {
+    display: none;
   }
 }

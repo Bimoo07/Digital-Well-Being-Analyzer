@@ -162,31 +162,33 @@ function renderDashboard(userData, score, category) {
  * ease-out: cepat di awal, melambat menjelang akhir.
  */
 function animateScore(finalScore) {
-    const scoreElement = document.querySelector(".score-number");
+  const scoreElement = document.querySelector(".score-number");
 
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) {
-        scoreElement.textContent = finalScore;
-        return;
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  if (prefersReducedMotion) {
+    scoreElement.textContent = finalScore;
+    return;
+  }
+
+  const duration = 1000; // total durasi animasi (ms)
+  const startTime = performance.now();
+
+  function tick(now) {
+    const elapsed = now - startTime;
+    const rawProgress = Math.min(1, elapsed / duration); // 0 -> 1, dibatasi maks 1
+
+    // Rumus cubic ease-out: melengkungkan progress linear jadi "cepat lalu melambat"
+    const easedProgress = 1 - Math.pow(1 - rawProgress, 3);
+
+    const currentValue = Math.round(easedProgress * finalScore);
+    scoreElement.textContent = currentValue;
+
+    if (rawProgress < 1) {
+      requestAnimationFrame(tick);
     }
+  }
 
-    const duration = 10000; // total durasi animasi (ms)
-    const startTime = performance.now();
-
-    function tick(now) {
-        const elapsed = now - startTime;
-        const rawProgress = Math.min(1, elapsed / duration); // 0 -> 1, dibatasi maks 1
-
-        // Rumus cubic ease-out: melengkungkan progress linear jadi "cepat lalu melambat"
-        const easedProgress = 1 - Math.pow(1 - rawProgress, 3);
-
-        const currentValue = Math.round(easedProgress * finalScore);
-        scoreElement.textContent = currentValue;
-
-        if (rawProgress < 1) {
-            requestAnimationFrame(tick);
-        }
-    }
-
-    requestAnimationFrame(tick);
+  requestAnimationFrame(tick);
 }
