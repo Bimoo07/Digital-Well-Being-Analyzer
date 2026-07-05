@@ -105,10 +105,22 @@ btnSeeResult.addEventListener("click", function () {
   // loading tidak pernah tahu hasilnya, murni kosmetik.
   const wellnessScore = calculateWellnessScore(userData);
   const wellnessCategory = getWellnessCategory(wellnessScore);
+  const aspectBreakdown = getAspectBreakdown(userData);
+  const scoreExplanation = buildScoreExplanation(
+    aspectBreakdown,
+    wellnessScore,
+    wellnessCategory,
+  );
 
   // Dashboard baru dirender & ditampilkan SETELAH loading selesai
   runAnalysisLoading(function () {
-    renderDashboard(userData, wellnessScore, wellnessCategory);
+    renderDashboard(userData, wellnessScore, wellnessCategory, scoreExplanation);
+    showSection("dashboard");
+  });
+
+  // Dashboard baru dirender & ditampilkan SETELAH loading selesai
+  runAnalysisLoading(function () {
+    renderDashboard(userData, wellnessScore, wellnessCategory, scoreExplanation);
     showSection("dashboard");
   });
 });
@@ -116,12 +128,15 @@ btnSeeResult.addEventListener("click", function () {
 /**
  * Menampilkan hasil scoring ke elemen-elemen dashboard
  */
-function renderDashboard(userData, score, category) {
+function renderDashboard(userData, score, category, explanation) {
   // ----- Skor & Kategori -----
   animateScore(score);
 
+  document.querySelector(".score-explanation").textContent = explanation;
+
   const categoryBadge = document.querySelector(".category-badge");
   categoryBadge.textContent = category;
+
   // className mengganti SELURUH class sekaligus -> otomatis reset warna lama, pasang warna baru
   categoryBadge.className = `category-badge category-${category.toLowerCase()}`;
 

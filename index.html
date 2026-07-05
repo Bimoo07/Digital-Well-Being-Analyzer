@@ -17,6 +17,20 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
+
+    <!-- ===== HEADER: BRANDING LOGO =====
+         Elemen statis (bukan fixed), ditaruh SEBELUM <main> supaya
+         konsisten muncul di semua section tanpa perlu z-index/padding
+         kompensasi -- section-section di dalam <main> tetap swap
+         seperti biasa, header ini tidak ikut ter-hidden. -->
+    <header class="site-header">
+      <img
+        class="brand-logo"
+        src="assets/images/Logo DP.PNG"
+        alt="Logo BINUS Digital Psychology"
+      />
+    </header>
+
     <!-- ===== FLOATING BACKGROUND SHAPES (dekoratif, tidak interaktif) =====
          aria-hidden="true": screen reader mengabaikan elemen ini sepenuhnya,
          karena tidak membawa informasi apa pun bagi pengguna. -->
@@ -32,15 +46,71 @@
     <main>
       <!-- ===== SECTION: LANDING ===== -->
       <section id="landing" class="landing-section">
-        <div class="landing-card">
-          <h1 class="landing-title">Digital Well-Being Analyzer</h1>
-          <p class="landing-subtitle">
-            Kenali kebiasaan digitalmu dan temukan seberapa seimbang gaya
-            hidupmu di era teknologi.
-          </p>
-          <button id="btnStartAssessment" class="btn-primary" type="button">
-            Mulai Assessment
-          </button>
+        <div class="hero-grid">
+          <!-- ===== KOLOM KIRI: TEKS, CTA, DISCLAIMER =====
+               class "landing-card" TETAP dipakai (bukan diganti) supaya
+               otomatis ikut aturan glassmorphism & hover yang sudah ada
+               di style.css -- tidak perlu duplikasi kode blur/border. -->
+          <div class="landing-card hero-content">
+            <p class="hero-eyebrow">
+              Apakah kebiasaan digitalmu sudah seimbang?
+            </p>
+            <h1 class="landing-title">Digital Well-Being Analyzer</h1>
+            <p class="landing-subtitle">
+              Pahami kebiasaan digitalmu dan temukan keseimbangan penggunaan
+              teknologi melalui simulasi Digital Well-Being Analyzer.
+            </p>
+            <button id="btnStartAssessment" class="btn-primary" type="button">
+              Mulai Assessment
+            </button>
+
+            <!-- ===== DISCLAIMER ===== -->
+            <div class="disclaimer-box">
+              <span class="disclaimer-icon" aria-hidden="true">ℹ️</span>
+              <p class="disclaimer-text">
+                Program ini merupakan demonstrasi edukatif untuk
+                memperkenalkan konsep Digital Well-Being. Hasil yang
+                ditampilkan bukan merupakan diagnosis psikologis maupun
+                medis dan tidak dapat menggantikan konsultasi dengan tenaga
+                profesional.
+              </p>
+            </div>
+          </div>
+
+          <!-- ===== KOLOM KANAN: ILUSTRASI & INFO CARD ===== -->
+          <div class="hero-visual">
+            <svg
+              class="hero-illustration"
+              viewBox="0 0 240 240"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <circle class="illustration-ring-outer" cx="120" cy="120" r="100" />
+              <circle class="illustration-ring-inner" cx="120" cy="120" r="70" />
+              <path class="illustration-balance-line" d="M60 130 Q120 85 180 130" />
+              <!-- Ketiga cx/cy di bawah BUKAN angka bebas -- dihitung persis
+                   dari titik awal, puncak (t=0.5), dan akhir path di atas,
+                   supaya bulatan menempel tepat pada garis, bukan melayang. -->
+              <circle class="illustration-dot-secondary" cx="60" cy="130" r="8" />
+              <circle class="illustration-dot-primary" cx="120" cy="107.5" r="10" />
+              <circle class="illustration-dot-accent" cx="180" cy="130" r="8" />
+            </svg>
+
+            <div class="info-card">
+              <h2 class="info-card-title">Manfaat Menggunakan Aplikasi Ini</h2>
+              <ul class="info-card-list">
+                <li>Merefleksikan kebiasaan digital sehari-hari.</li>
+                <li>
+                  Mengenali keseimbangan antara aktivitas digital dan
+                  kehidupan sehari-hari.
+                </li>
+                <li>
+                  Mendapatkan rekomendasi sederhana untuk membangun kebiasaan
+                  digital yang lebih sehat.
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -52,7 +122,7 @@
         <div class="assessment-grid">
           <!-- Card 1: Screen Time -->
           <div class="input-card">
-            <span class="input-icon">📱</span>
+
             <label for="screenTime" class="input-label">Screen Time</label>
             <input
               type="range"
@@ -70,7 +140,7 @@
 
           <!-- Card 2: Sleep Duration -->
           <div class="input-card">
-            <span class="input-icon">😴</span>
+            
             <label for="sleep" class="input-label">Durasi Tidur</label>
             <input
               type="range"
@@ -88,7 +158,7 @@
 
           <!-- Card 3: Social Media -->
           <div class="input-card">
-            <span class="input-icon">📲</span>
+            
             <label for="socialMedia" class="input-label">Social Media</label>
             <input
               type="range"
@@ -106,7 +176,7 @@
 
           <!-- Card 4: Gaming -->
           <div class="input-card">
-            <span class="input-icon">🎮</span>
+            
             <label for="gaming" class="input-label">Gaming</label>
             <input
               type="range"
@@ -124,7 +194,7 @@
 
           <!-- Card 5: Study Duration -->
           <div class="input-card">
-            <span class="input-icon">📚</span>
+            
             <label for="study" class="input-label">Durasi Belajar</label>
             <input
               type="range"
@@ -156,12 +226,13 @@
             <span class="score-label">/ 100</span>
           </div>
           <span class="category-badge">--</span>
+          <p class="score-explanation">--</p>
         </div>
 
         <div class="progress-list">
           <div class="progress-item" data-metric="screenTime" data-max="16">
             <div class="progress-header">
-              <span>📱 Screen Time</span>
+              <span>Screen Time</span>
               <span class="progress-value">-- jam</span>
             </div>
             <div class="progress-track">
@@ -171,7 +242,7 @@
 
           <div class="progress-item" data-metric="sleep" data-max="12">
             <div class="progress-header">
-              <span>😴 Durasi Tidur</span>
+              <span>Durasi Tidur</span>
               <span class="progress-value">-- jam</span>
             </div>
             <div class="progress-track">
@@ -181,7 +252,7 @@
 
           <div class="progress-item" data-metric="socialMedia" data-max="10">
             <div class="progress-header">
-              <span>📲 Social Media</span>
+              <span>Social Media</span>
               <span class="progress-value">-- jam</span>
             </div>
             <div class="progress-track">
@@ -191,7 +262,7 @@
 
           <div class="progress-item" data-metric="gaming" data-max="10">
             <div class="progress-header">
-              <span>🎮 Gaming</span>
+              <span>Gaming</span>
               <span class="progress-value">-- jam</span>
             </div>
             <div class="progress-track">
@@ -201,7 +272,7 @@
 
           <div class="progress-item" data-metric="study" data-max="10">
             <div class="progress-header">
-              <span>📚 Durasi Belajar</span>
+              <span>Durasi Belajar</span>
               <span class="progress-value">-- jam</span>
             </div>
             <div class="progress-track">
@@ -212,7 +283,7 @@
 
         <!-- ===== PSYCHOLOGY INSIGHT ===== -->
         <div class="insight-box">
-          <h3 class="insight-title">🧠 Psychology Insight</h3>
+          <h3 class="insight-title">Psychology Insight</h3>
           <p class="psychology-insight">--</p>
         </div>
 
@@ -227,6 +298,13 @@
         </button>
       </section>
     </main>
+
+    <!-- ===== FOOTER: IDENTITAS PENGEMBANG =====
+         fixed (bukan statis) -- ini watermark kecil di pojok layar yang
+         harus selalu terlihat tanpa ikut alur scroll dokumen. -->
+    <footer class="developer-credit">
+      <p>Aloysius Bimo Prasetyo<br />BINUS – Digital Psychology</p>
+    </footer>
 
     <!-- ===== LOADING OVERLAY (ANALYSIS TRANSITION) ===== -->
     <div id="loadingOverlay" class="loading-overlay hidden">

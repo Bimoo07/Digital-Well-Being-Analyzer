@@ -1,72 +1,125 @@
 /**
- * ===== RULE ENGINE: DIGITAL WELLNESS SCORE =====
- * Prinsip: mulai dari skor sempurna (100), lalu KURANGI berdasarkan
- * aturan yang melanggar prinsip Self-Regulation & Habit Formation.
- * Fungsi ini murni kalkulasi -- tidak menyentuh HTML sama sekali.
+ * ===== KATEGORISASI PER ASPEK =====
+ * Tiap aspek dinilai independen dulu jadi kategori (Poor/Fair/Good/Excellent),
+ * BARU skor akhir = rata-rata nilai numerik dari kategori-kategori itu.
+ * Jumlah tingkat kategori sengaja mengikuti jumlah level penalti versi lama --
+ * tidak menambah ambang batas baru yang belum pernah didiskusikan.
  */
-function calculateWellnessScore(data) {
-  let score = 100;
+const ASPECT_CATEGORY_VALUE = {
+    Excellent: 100,
+    Good: 75,
+    Fair: 50,
+    Poor: 25,
+};
 
-  // ----- RULE: SCREEN TIME (Self-Regulation) -----
-  // Screen time tinggi menandakan lemahnya regulasi diri terhadap teknologi
-  if (data.screenTime > 10) {
-    score -= 20;
-  } else if (data.screenTime > 8) {
-    score -= 10;
-  } else if (data.screenTime > 6) {
-    score -= 5;
-  }
+// Label Bahasa Indonesia -- khusus untuk pesan penjelasan (poin 2),
+// dipisah dari "Excellent/Good/Fair/Poor" yang tetap dipakai category-badge
+const CATEGORY_LABEL_ID = {
+    Excellent: "Sangat Baik",
+    Good: "Baik",
+    Fair: "Cukup",
+    Poor: "Kurang",
+};
 
-  // ----- RULE: SLEEP DURATION (Habit Formation) -----
-  // Tidur < 6 jam mengganggu siklus kebiasaan sehat jangka panjang
-  if (data.sleep < 5) {
-    score -= 20;
-  } else if (data.sleep < 6) {
-    score -= 10;
-  } else if (data.sleep < 7) {
-    score -= 5;
-  }
+function categorizeScreenTime(value) {
+    if (value > 10) return "Poor";
+    if (value > 8) return "Fair";
+    if (value > 6) return "Good";
+    return "Excellent";
+}
 
-  // ----- RULE: SOCIAL MEDIA (Behavioral Psychology) -----
-  // Social media berlebihan berkaitan dengan pola reward-seeking behavior
-  if (data.socialMedia > 6) {
-    score -= 15;
-  } else if (data.socialMedia > 4) {
-    score -= 8;
-  }
+function categorizeSleep(value) {
+    if (value < 5) return "Poor";
+    if (value < 6) return "Fair";
+    if (value < 7) return "Good";
+    return "Excellent";
+}
 
-  // ----- RULE: GAMING (Behavioral Psychology) -----
-  if (data.gaming > 5) {
-    score -= 15;
-  } else if (data.gaming > 3) {
-    score -= 8;
-  }
+function categorizeSocialMedia(value) {
+    if (value > 6) return "Poor";
+    if (value > 4) return "Fair";
+    return "Excellent";
+}
 
-  // ----- RULE: STUDY DURATION (Habit Formation - reward positif) -----
-  // Durasi belajar cukup justru MENAMBAH skor, bukan mengurangi
-  if (data.study >= 3) {
-    score += 5;
-  }
+function categorizeGaming(value) {
+    if (value > 5) return "Poor";
+    if (value > 3) return "Fair";
+    return "Excellent";
+}
 
-  // Pastikan skor tidak pernah keluar dari rentang 0-100
-  score = Math.max(0, Math.min(100, score));
+function categorizeStudy(value) {
+    // Aturan lama hanya punya bonus (tidak ada penalti), jadi "buruk" di sini
+    // dipetakan ke Fair (netral), bukan Poor -- supaya tidak menghukum lebih
+    // keras dari yang pernah disepakati sebelumnya.
+    return value >= 3 ? "Excellent" : "Fair";
+}
 
-  return score;
+// Satu sumber kebenaran untuk urutan & label aspek -- dipakai kalkulasi
+// skor MAUPUN pesan penjelasan, supaya keduanya tidak pernah "beda cerita".
+const aspectDefinitions = [
+    { metric: "screenTime", label: "Screen Time", categorize: categorizeScreenTime },
+    { metric: "sleep", label: "Durasi Tidur", categorize: categorizeSleep },
+    { metric: "socialMedia", label: "Social Media", categorize: categorizeSocialMedia },
+    { metric: "gaming", label: "Gaming", categorize: categorizeGaming },
+    { metric: "study", label: "Durasi Belajar", categorize: categorizeStudy },
+];
+
+/**
+ * Mengembalikan kategori TIAP aspek secara terpisah -- inilah data
+ * yang dipakai ulang untuk membangun pesan penjelasan skor.
+ */
+function getAspectBreakdown(data) {
+    return aspectDefinitions.map(function (aspect) {
+        const category = aspect.categorize(data[aspect.metric]);
+        return {
+            metric: aspect.metric,
+            label: aspect.label,
+            category: category,
+            categoryLabelID: CATEGORY_LABEL_ID[category],
+            value: ASPECT_CATEGORY_VALUE[category],
+        };
+    });
 }
 
 /**
- * ===== MENENTUKAN CATEGORY BERDASARKAN SKOR =====
- * Dipisah jadi fungsi sendiri (bukan digabung ke atas) supaya
- * satu fungsi = satu tanggung jawab: mudah ditest & dibaca ulang.
+ * ===== SKOR AKHIR = RATA-RATA KATEGORI PER ASPEK =====
+ */
+function calculateWellnessScore(data) {
+    const breakdown = getAspectBreakdown(data);
+    const total = breakdown.reduce(function (sum, aspect) {
+        return sum + aspect.value;
+    }, 0);
+
+    return Math.round(total / breakdown.length);
+}
+
+/**
+ * ===== MENENTUKAN CATEGORY BERDASARKAN SKOR ===== (TIDAK BERUBAH)
  */
 function getWellnessCategory(score) {
-  if (score >= 85) {
-    return "Excellent";
-  } else if (score >= 70) {
-    return "Good";
-  } else if (score >= 50) {
-    return "Fair";
-  } else {
-    return "Poor";
-  }
+    if (score >= 85) {
+        return "Excellent";
+    } else if (score >= 70) {
+        return "Good";
+    } else if (score >= 50) {
+        return "Fair";
+    } else {
+        return "Poor";
+    }
+}
+
+/**
+ * ===== PESAN PENJELASAN SKOR (poin 2) =====
+ * Disusun dari breakdown yang SAMA PERSIS dipakai untuk menghitung skor --
+ * menjamin pesan ini selalu konsisten dengan angka yang ditampilkan.
+ */
+function buildScoreExplanation(breakdown, score, category) {
+    const categoryLabelText = CATEGORY_LABEL_ID[category];
+    const perAspectText = breakdown
+        .map(function (aspect) {
+            return `${aspect.label}: ${aspect.categoryLabelID}`;
+        })
+        .join(", ");
+
+    return `Skor ${score} (${categoryLabelText}) didapat dari rata-rata kategori 5 aspek berikut — ${perAspectText}.`;
 }
