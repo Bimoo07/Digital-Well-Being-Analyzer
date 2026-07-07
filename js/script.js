@@ -111,99 +111,127 @@ btnSeeResult.addEventListener("click", function () {
     wellnessScore,
     wellnessCategory,
   );
+  const dominantFactors = getDominantFactors(userData);
+  const patternInterpretation = getPatternInterpretation(userData);
 
   // Dashboard baru dirender & ditampilkan SETELAH loading selesai
   runAnalysisLoading(function () {
-    renderDashboard(userData, wellnessScore, wellnessCategory, scoreExplanation);
+    renderDashboard(
+      userData,
+      wellnessScore,
+      wellnessCategory,
+      scoreExplanation,
+      dominantFactors,
+      patternInterpretation,
+    );
     showSection("dashboard");
   });
 
-  // Dashboard baru dirender & ditampilkan SETELAH loading selesai
-  runAnalysisLoading(function () {
-    renderDashboard(userData, wellnessScore, wellnessCategory, scoreExplanation);
-    showSection("dashboard");
-  });
-});
+  /**
+   * Menampilkan hasil scoring ke elemen-elemen dashboard
+   */
+  function renderDashboard(
+    userData,
+    score,
+    category,
+    explanation,
+    dominantFactors,
+    patternInterpretation,
+  ) {
+    // ----- Skor & Kategori -----
+    animateScore(score);
 
-/**
- * Menampilkan hasil scoring ke elemen-elemen dashboard
- */
-function renderDashboard(userData, score, category, explanation) {
-  // ----- Skor & Kategori -----
-  animateScore(score);
+    document.querySelector(".score-explanation").textContent = explanation;
 
-  document.querySelector(".score-explanation").textContent = explanation;
+    const categoryBadge = document.querySelector(".category-badge");
+    categoryBadge.textContent = category;
 
-  const categoryBadge = document.querySelector(".category-badge");
-  categoryBadge.textContent = category;
-
-  // className mengganti SELURUH class sekaligus -> otomatis reset warna lama, pasang warna baru
-  categoryBadge.className = `category-badge category-${category.toLowerCase()}`;
-
-  // ----- Progress tiap indikator -----
-  const progressItems = document.querySelectorAll(".progress-item");
-  progressItems.forEach(function (item) {
-    // dataset membaca atribut data-metric & data-max yang ditulis di HTML
-    const metric = item.dataset.metric;
-    const max = Number(item.dataset.max);
-    const value = userData[metric];
-    const percentage = (value / max) * 100;
-
-    item.querySelector(".progress-value").textContent = `${value} jam`;
-    item.querySelector(".progress-fill").style.width = `${percentage}%`;
-
-    // ----- Psychology Insight -----
-    document.querySelector(".psychology-insight").textContent =
-      getPsychologyInsight(category);
-
-    // ----- Recommendation List -----
-    const recommendationList = document.querySelector(".recommendation-list");
-    recommendationList.innerHTML = ""; // Kosongkan dulu, cegah rekomendasi lama menumpuk
-
-    const recommendations = generateRecommendations(userData);
-    recommendations.forEach(function (text) {
-      const li = document.createElement("li");
-      li.textContent = text;
-      recommendationList.appendChild(li);
+    // ----- Dominant Factors (BARU) -----
+    // Sengaja DI LUAR progressItems.forEach di bawah -- supaya render
+    // sekali saja, tidak ikut ter-duplikasi 5x seperti bug lama.
+    const dominantFactorsList = document.querySelector(
+      ".dominant-factors-list",
+    );
+    dominantFactorsList.innerHTML = "";
+    dominantFactors.forEach(function (factor) {
+      const chip = document.createElement("span");
+      chip.className = `factor-chip ${factor.colorClass}`;
+      chip.textContent = `${factor.icon} ${factor.text}`;
+      dominantFactorsList.appendChild(chip);
     });
-  });
-}
 
-/**
- * Menganimasikan angka skor dari 0 naik bertahap ke nilai akhir.
- */
-/**
- * Menganimasikan angka skor dari 0 naik ke nilai akhir dengan efek
- * ease-out: cepat di awal, melambat menjelang akhir.
- */
-function animateScore(finalScore) {
-  const scoreElement = document.querySelector(".score-number");
+    // ----- Pattern Interpretation (BARU) -----
+    document.querySelector(".pattern-interpretation-text").textContent =
+      patternInterpretation;
 
-  const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  ).matches;
-  if (prefersReducedMotion) {
-    scoreElement.textContent = finalScore;
-    return;
+    // className mengganti SELURUH class sekaligus -> otomatis reset warna lama, pasang warna baru
+    categoryBadge.className = `category-badge category-${category.toLowerCase()}`;
+
+    // ----- Progress tiap indikator -----
+    const progressItems = document.querySelectorAll(".progress-item");
+    progressItems.forEach(function (item) {
+      // dataset membaca atribut data-metric & data-max yang ditulis di HTML
+      const metric = item.dataset.metric;
+      const max = Number(item.dataset.max);
+      const value = userData[metric];
+      const percentage = (value / max) * 100;
+
+      item.querySelector(".progress-value").textContent = `${value} jam`;
+      item.querySelector(".progress-fill").style.width = `${percentage}%`;
+
+      // ----- Psychology Insight -----
+      document.querySelector(".psychology-insight").textContent =
+        getPsychologyInsight(category);
+
+      // ----- Recommendation List -----
+      const recommendationList = document.querySelector(".recommendation-list");
+      recommendationList.innerHTML = ""; // Kosongkan dulu, cegah rekomendasi lama menumpuk
+
+      const recommendations = generateRecommendations(userData);
+      recommendations.forEach(function (text) {
+        const li = document.createElement("li");
+        li.textContent = text;
+        recommendationList.appendChild(li);
+      });
+    });
   }
 
-  const duration = 1000; // total durasi animasi (ms)
-  const startTime = performance.now();
+  /**
+   * Menganimasikan angka skor dari 0 naik bertahap ke nilai akhir.
+   */
+  /**
+   * Menganimasikan angka skor dari 0 naik ke nilai akhir dengan efek
+   * ease-out: cepat di awal, melambat menjelang akhir.
+   */
+  function animateScore(finalScore) {
+    const scoreElement = document.querySelector(".score-number");
 
-  function tick(now) {
-    const elapsed = now - startTime;
-    const rawProgress = Math.min(1, elapsed / duration); // 0 -> 1, dibatasi maks 1
-
-    // Rumus cubic ease-out: melengkungkan progress linear jadi "cepat lalu melambat"
-    const easedProgress = 1 - Math.pow(1 - rawProgress, 3);
-
-    const currentValue = Math.round(easedProgress * finalScore);
-    scoreElement.textContent = currentValue;
-
-    if (rawProgress < 1) {
-      requestAnimationFrame(tick);
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (prefersReducedMotion) {
+      scoreElement.textContent = finalScore;
+      return;
     }
-  }
 
-  requestAnimationFrame(tick);
-}
+    const duration = 1000; // total durasi animasi (ms)
+    const startTime = performance.now();
+
+    function tick(now) {
+      const elapsed = now - startTime;
+      const rawProgress = Math.min(1, elapsed / duration); // 0 -> 1, dibatasi maks 1
+
+      // Rumus cubic ease-out: melengkungkan progress linear jadi "cepat lalu melambat"
+      const easedProgress = 1 - Math.pow(1 - rawProgress, 3);
+
+      const currentValue = Math.round(easedProgress * finalScore);
+      scoreElement.textContent = currentValue;
+
+      if (rawProgress < 1) {
+        requestAnimationFrame(tick);
+      }
+    }
+
+    requestAnimationFrame(tick);
+  }
+});
